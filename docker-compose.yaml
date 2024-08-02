@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  cybulde-data-processing:
+    user: root
+    hostname: rishikeshdhayarkar
+    container_name: cybulde-data-processing-web-app
+    image: ${CYBULDE_DATA_PROCESSING_GCP_DOCKER_IMAGE}
+    platform: linux/amd64
+    ports:
+      - 8000:8000
+    ipc: host
+    init: true
+    volumes:
+      - ~/.config/gcloud/:/home/${USER_NAME}/.config/gcloud
+
+  cybulde-model:
+    user: root
+    hostname: rishikeshdhayarkar
+    container_name: cybulde-model-web-app
+    image: ${CYBULDE_MODEL_GCP_DOCKER_IMAGE}
+    platform: linux/amd64
+    ports:
+      - 8001:8001
+    ipc: host
+    init: true
+    volumes:
+      - ~/.config/gcloud/:/home/${USER_NAME}/.config/gcloud
+    environment:
+      - IS_PROD_ENV=false
+
+  app:
+    user: "${USER_ID:-1000}"
+    hostname: "${HOST_NAME:-rishikeshdhayarkar}"
+    image: cybulde-web-app
+    container_name: cybulde-web-app
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        USER_NAME: "${USER_NAME:-dhayarkar}"
+        USER_ID: "${USER_ID:-1000}"
+    volumes:
+      - ./:/app/
+      - ~/.config/gcloud/:/home/${USER_NAME}/.config/gcloud
+    ports:
+      - 8080:8080
+
+    ipc: host
+    init: true
