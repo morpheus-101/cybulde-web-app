@@ -9,25 +9,6 @@ from annotated_text import annotated_text
 from omegaconf import DictConfig
 
 
-def show_about_page() -> None:
-    st.title("About Our Web App")
-
-    st.header("Overview")
-    st.write(
-        "Hello!"
-    )
-
-    st.header("The Challenge & Our Solution")
-    st.write(
-        "Cyberbullying is a silent but potent threat in the online universe. To tackle this issue, we trained a classifier with a rich dataset to identify and flag potential instances of cyberbullying on Twitter. Our model, powered by advanced NLP techniques, provides a nuanced understanding of digital communication, differentiating between casual banter and harmful intent."
-    )
-
-    st.header("Features of the Web App")
-    st.markdown(
-        "* Live Detection: Witness the efficiency of our model as it analyses tweets in real-time, fetched straight from Twitter."
-    )
-    st.markdown("* Test model with your own text")
-
 @st.cache_data
 def read_dataset(dataset_path: str) -> pd.DataFrame:
     return pd.read_parquet(dataset_path)
@@ -88,9 +69,7 @@ def build_streamlit_page(config: DictConfig) -> None:
         ["What is this page about?", "Use the model on random test dataset samples", "Use the model on your own text"],
     )
 
-    if selected_mode == "What is this page about?":
-        show_about_page()
-    elif selected_mode == "Use the model on random test dataset samples":
+    if selected_mode == "Use the model on random test dataset samples":
         use_the_model_on_random_samples(config)
     else:
         use_the_model_on_your_own_text(config)
